@@ -1,7 +1,8 @@
-import { Link as RouterLink } from 'react-router-dom';
+// import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, Link, Container, Typography } from '@mui/material';
+import { Card, Container, Typography } from '@mui/material';
+
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
@@ -9,7 +10,7 @@ import Page from '../components/Page';
 import Logo from '../components/Logo';
 // sections
 import { LoginForm } from '../sections/auth/login';
-import AuthSocial from '../sections/auth/AuthSocial';
+// import AuthSocial from '../sections/auth/AuthSocial';
 
 // ----------------------------------------------------------------------
 
@@ -57,48 +58,49 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Login() {
-  const smUp = useResponsive('up', 'sm');
+  // const smUp = useResponsive('up', 'sm');
 
   const mdUp = useResponsive('up', 'md');
 
   return (
-    <Page title="Login">
-      <RootStyle>
-        <HeaderStyle>
-          <Logo />
+    <>
+      <Page title="Login">
+        <RootStyle>
+          <HeaderStyle>
+            <Logo />
 
-          {/* {smUp && (
+            {/* {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }}>
-              Don’t have an account? {''}
+            Don’t have an account? {''}
               <Link variant="subtitle2" component={RouterLink} to="/register">
                 Get started
               </Link>
             </Typography>
           )} */}
-        </HeaderStyle>
+          </HeaderStyle>
 
-        {mdUp && (
-          <SectionStyle>
-            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Hi, Welcome Back
-            </Typography>
-            <img src="/static/illustrations/illustration_login.png" alt="login" />
-          </SectionStyle>
-        )}
+          {mdUp && (
+            <SectionStyle>
+              <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
+                Hi, Welcome Back
+              </Typography>
+              <img src="/static/illustrations/illustration_login.png" alt="login" />
+            </SectionStyle>
+          )}
 
-        <Container maxWidth="sm">
-          <ContentStyle>
-            <Typography variant="h4" gutterBottom>
-              Sign in
-            </Typography>
+          <Container maxWidth="sm">
+            <ContentStyle>
+              <Typography variant="h4" gutterBottom>
+                Sign in
+              </Typography>
 
-            <Typography sx={{ color: 'text.secondary', mb: 5 }}>Enter your details below.</Typography>
+              <Typography sx={{ color: 'text.secondary', mb: 5 }}>Enter your details below.</Typography>
 
-            {/* <AuthSocial /> */}
+              {/* <AuthSocial /> */}
 
-            <LoginForm />
+              <LoginForm />
 
-            {/* {!smUp && (
+              {/* {!smUp && (
               <Typography variant="body2" align="center" sx={{ mt: 3 }}>
                 Don’t have an account?{' '}
                 <Link variant="subtitle2" component={RouterLink} to="/register">
@@ -106,9 +108,10 @@ export default function Login() {
                 </Link>
               </Typography>
             )} */}
-          </ContentStyle>
-        </Container>
-      </RootStyle>
-    </Page>
+            </ContentStyle>
+          </Container>
+        </RootStyle>
+      </Page>
+    </>
   );
 }
