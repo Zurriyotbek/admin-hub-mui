@@ -58,7 +58,10 @@ export default function LoginForm() {
   const onSubmit = async (e) => {
     const { username, password } = e;
 
-    const response = await fetch('http://159.223.209.173:8080/api/v1/authorization/login', {
+    // /api/v1/authorization/login
+    // https://medifast.eduspace.me/
+
+    const response = await fetch('https://medifast.eduspace.me/api/v1/authorization/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
