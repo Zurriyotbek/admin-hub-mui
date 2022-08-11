@@ -13,6 +13,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 
 // components
+import { useDispatch } from 'react-redux/es/hooks/useDispatch';
+import { setAdmin } from '../../../redux/slices/admin/index';
+import Axios from '../../../api/axios';
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hook-form';
 
@@ -20,6 +23,8 @@ import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hoo
 
 export default function LoginForm() {
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -61,26 +66,43 @@ export default function LoginForm() {
     // /api/v1/authorization/login
     // https://medifast.eduspace.me/
 
-    const response = await fetch('https://medifast.eduspace.me/api/v1/authorization/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
+    // const response = await fetch('https://medifast.eduspace.me/api/v1/authorization/login', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     username,
+    //     password,
+    //   }),
+    // });
 
-    if (response.status === 400) {
-      notify();
-    }
+    // if (response.status === 400) {
+    //   notify();
+    // }
 
-    if (response.status === 200) {
-      const data = await response.json();
-      localStorage.setItem('token', data.token);
-      navigate('/dashboard/app', { replace: true });
-    }
+    // if (response.status === 200) {
+    //   const data = await response.json();
+    //   localStorage.setItem('token', data.token);
+    //   navigate('/dashboard/app', { replace: true });
+    // }
+
+    Axios.post('api/v1/authorization/login', {
+      username,
+      password,
+    })
+      .then((response) => {
+        const token = response.data.jwt;
+        const user = response.data;
+        localStorage.setItem('admin_token', token);
+        dispatch(setAdmin(user));
+        navigate('/dashboard/app', { replace: true });
+      })
+      .catch((error) => {
+        if (error.response.status === 400) {
+          notify();
+        }
+      });
   };
 
   return (
