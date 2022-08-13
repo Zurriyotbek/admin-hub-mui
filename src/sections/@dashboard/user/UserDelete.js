@@ -8,13 +8,24 @@ const btnWrapper = {
   justifyContent: 'flex-end',
 };
 
-const URL = '/api/v1/patient/list';
+const URL = '/api/v1/patient/delete/';
 
-export default function UserDelete() {
+// eslint-disable-next-line react/prop-types
+export default function UserDelete({ setDeleteModal }) {
   const patient = useSelector((state) => state.patients.selectedPatient);
 
   const handleDelete = async () => {
-    await Axios.delete(`${URL}/${patient.id}`);
+    await Axios.delete(`${URL}${patient.id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+      .then((res) => {
+        console.log(res, 'delete res');
+      })
+      .catch((err) => {
+        console.log(err, 'delete err');
+      });
   };
 
   return (
@@ -30,7 +41,7 @@ export default function UserDelete() {
         >
           Delete
         </Button>
-        <Button variant="contained" color="secondary">
+        <Button variant="contained" color="secondary" onClick={() => setDeleteModal(false)}>
           Cancel
         </Button>
       </div>

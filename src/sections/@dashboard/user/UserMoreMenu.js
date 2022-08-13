@@ -6,6 +6,7 @@ import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/mat
 import Iconify from '../../../components/Iconify';
 import Modal from '../../../components/modal/modal';
 import UserDelete from './UserDelete';
+import UserEdit from './UserEdit';
 
 // ----------------------------------------------------------------------
 
@@ -17,8 +18,8 @@ export default function UserMoreMenu() {
 
   return (
     <>
-      <Modal open={openModal} setOpen={setOpenModal} content={<p>Edit modal</p>} />
-      <Modal open={deleteModal} setOpen={setDeleteModal} content={<UserDelete />} />
+      <Modal open={openModal} setOpen={setOpenModal} content={<UserEdit />} />
+      <Modal open={deleteModal} setOpen={setDeleteModal} content={<UserDelete setDeleteModal={setDeleteModal} />} />
       <IconButton ref={ref} onClick={() => setIsOpen(true)}>
         <Iconify icon="eva:more-vertical-fill" width={20} height={20} />
       </IconButton>
