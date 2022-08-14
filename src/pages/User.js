@@ -133,7 +133,6 @@ export default function User() {
         console.log(error);
       })
       .finally(() => {
-        console.log('finally');
         setLoading(false);
       });
   }, [filterName, page]);

@@ -14,7 +14,7 @@ import Axios from '../api/axios';
 const URL = 'api/v1/admin/bot-stats';
 
 export default function DashboardApp() {
-  const theme = useTheme();
+  // const theme = useTheme();
 
   const [botStats, setBotStats] = useState({});
 
@@ -25,7 +25,6 @@ export default function DashboardApp() {
       },
     })
       .then((res) => {
-        console.log(res);
         setBotStats(res.data);
       })
       .catch((err) => {

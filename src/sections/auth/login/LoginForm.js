@@ -63,30 +63,6 @@ export default function LoginForm() {
   const onSubmit = async (e) => {
     const { username, password } = e;
 
-    // /api/v1/authorization/login
-    // https://medifast.eduspace.me/
-
-    // const response = await fetch('https://medifast.eduspace.me/api/v1/authorization/login', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     username,
-    //     password,
-    //   }),
-    // });
-
-    // if (response.status === 400) {
-    //   notify();
-    // }
-
-    // if (response.status === 200) {
-    //   const data = await response.json();
-    //   localStorage.setItem('token', data.token);
-    //   navigate('/dashboard/app', { replace: true });
-    // }
-
     Axios.post('api/v1/authorization/login', {
       username,
       password,
@@ -95,6 +71,7 @@ export default function LoginForm() {
         const token = response.data.jwt;
         const user = response.data;
         localStorage.setItem('admin_token', token);
+        localStorage.setItem('admin_user', JSON.stringify(user));
         dispatch(setAdmin(user));
         navigate('/dashboard/app', { replace: true });
       })
