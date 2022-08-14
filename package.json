@@ -39,6 +39,7 @@
     ]
   },
   "dependencies": {
+    "-": "^0.0.1",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@faker-js/faker": "^7.3.0",
@@ -67,6 +68,7 @@
     "react-scripts": "^5.0.1",
     "react-toastify": "^9.0.7",
     "redux": "^4.2.0",
+    "sass": "^1.54.4",
     "simplebar": "^5.3.8",
     "simplebar-react": "^2.4.1",
     "web-vitals": "^2.1.4",
