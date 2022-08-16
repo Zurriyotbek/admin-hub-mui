@@ -59,7 +59,7 @@ export default function UserInfo() {
   return (
     <Page title="User: UserInfo">
       <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
+        <Typography variant="h4" sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
           {`${patient.name} ${patient.surname}`}
           <img
             src={patient.gender === 'FEMALE' ? marsIcon : venusIcon}
@@ -73,6 +73,10 @@ export default function UserInfo() {
             </a>
             {/* <Link to={`tel:${patient?.phone}`}>{patient?.phone}</Link> */}
           </Typography>
+        </Typography>
+        <Typography sx={{ mb: 5, textAlign: 'right', color: 'GrayText', fontSize: '20px' }}>
+          <span style={{ fontWeight: 'bold' }}>Manzil: </span>
+          {patient?.region}
         </Typography>
 
         <Grid container spacing={3}>

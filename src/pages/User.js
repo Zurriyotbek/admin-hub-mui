@@ -102,7 +102,7 @@ export default function User() {
     switch (status) {
       case 'PENDING':
         return 'error';
-      case 'PROCESSING':
+      case 'PROCESS':
         return 'warning';
       case 'COMPLETED':
         return 'success';
@@ -138,7 +138,7 @@ export default function User() {
       });
   }, [filterName, page]);
 
-  const dateToFormat = '1976-04-19T12:59-0500';
+  const dateFormat = 'd MMM YYYY';
   return (
     <Page title="User">
       <Container>
@@ -147,7 +147,7 @@ export default function User() {
             Patients
           </Typography>
         </Stack>
-        <Moment>{dateToFormat}</Moment>
+
         <Card>
           <UserListToolbar filterName={filterName} onFilterName={handleFilterByName} />
 
@@ -167,7 +167,7 @@ export default function User() {
                 ) : (
                   <TableBody>
                     {patientsList?.map((row) => {
-                      const { id, name, surname, status, gender, complaints } = row;
+                      const { id, name, surname, status, gender, createdDate } = row;
 
                       return (
                         <TableRow
@@ -214,7 +214,7 @@ export default function User() {
                           </TableCell>
 
                           <TableCell align="left" sx={{ width: '450px', overflow: 'clip' }}>
-                            {complaints || 'Unknown'}{' '}
+                            <Moment format="D MMM YYYY, hh:mm">{createdDate.split('.')[0]}</Moment>
                           </TableCell>
 
                           <TableCell align="right">
