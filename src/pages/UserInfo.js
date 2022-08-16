@@ -1,45 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 // icons
 
-import { faker } from '@faker-js/faker';
 // @mui
-import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import { Grid, Container, Typography, Button } from '@mui/material';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-// import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Axios from '../api/axios';
 
 // icons
-import { Link } from 'react-router-dom';
 import marsIcon from '../assets/icons/mars-solid.svg';
 import venusIcon from '../assets/icons/venus-solid.svg';
 
 // components
 import Page from '../components/Page';
-import Iconify from '../components/Iconify';
 // sections
-import {
-  AppTasks,
-  AppNewsUpdate,
-  AppOrderTimeline,
-  AppCurrentVisits,
-  AppWebsiteVisits,
-  AppTrafficBySite,
-  AppWidgetSummary,
-  AppCurrentSubject,
-  AppConversionRates,
-} from '../sections/@dashboard/app';
+import { AppWidgetSummary } from '../sections/@dashboard/app';
 
-// import Page from '../components/Page';
-
+// URL
+const URL = 'api/v1/patient/update-diagnosis';
+// ----------------------------------------------------------------------
 export default function UserInfo() {
   const patient = useSelector((state) => state.patients.selectedPatient);
 
-  console.log(patient);
+  const [textAreaValue, setTextAreaValue] = useState(patient?.diagnosis || 'Not have');
 
   const handleCompaint = (complaint) => {
     if (complaint === null) {
@@ -56,8 +46,82 @@ export default function UserInfo() {
     }
   };
 
+  // React Tostify
+  const notify = (status) => {
+    switch (status) {
+      case 'success':
+        toast.success('Successfully updated diagnosis', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        break;
+      case 'error':
+        toast.error('Error updating diagnosis', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        break;
+      case 'warning':
+        toast.warn('Write diagnosis and try again!', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleTextAreaChange = (e) => {
+    setTextAreaValue(e.target.value);
+  };
+
+  const handleSave = () => {
+    const data = {
+      diagnosis: textAreaValue,
+      patientId: patient.id,
+    };
+
+    if (textAreaValue === 'Not have') {
+      notify('warning');
+    }
+
+    if (textAreaValue && textAreaValue !== 'Not have') {
+      Axios.put(URL, data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          notify('success');
+        })
+        .catch((err) => {
+          console.log(err);
+          notify('error');
+        });
+    }
+  };
+
   return (
     <Page title="User: UserInfo">
+      <ToastContainer />
+
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
           {`${patient.name} ${patient.surname}`}
@@ -71,7 +135,6 @@ export default function UserInfo() {
             <a href={`tel:${patient?.phone}`} style={{ marginLeft: '10px' }}>
               {patient?.phone}
             </a>
-            {/* <Link to={`tel:${patient?.phone}`}>{patient?.phone}</Link> */}
           </Typography>
         </Typography>
         <Typography sx={{ mb: 5, textAlign: 'right', color: 'GrayText', fontSize: '20px' }}>
@@ -150,7 +213,7 @@ export default function UserInfo() {
             />
           </Grid>
         </Grid>
-        <div style={{ marginTop: '70px', boxShadow: '2px 4px 10px 2px rgba(23,17,17,0.42)', borderRadius: '20px' }}>
+        <div style={{ marginTop: '70px', boxShadow: '1px 1px 10px 1px rgba(23,17,17,0.2)', borderRadius: '20px' }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
               <Typography variant="h5">Complaints</Typography>
@@ -197,6 +260,34 @@ export default function UserInfo() {
               <Typography>{patient?.drugsList || 'Unknown'}</Typography>
             </AccordionDetails>
           </Accordion>
+        </div>
+
+        {/* Patient diagnosis */}
+        <div
+          style={{
+            marginTop: '50px',
+            padding: '20px',
+            boxShadow: '1px 1px 10px 1px rgba(23,17,17,0.2)',
+            borderRadius: '20px',
+          }}
+        >
+          <Typography variant="h5" style={{ marginBottom: '20px', textAlign: 'center' }}>
+            Patient diagnosis
+          </Typography>
+          <div style={{ marginBottom: '20px' }}>
+            <TextField
+              id="outlined-multiline-static"
+              multiline
+              value={textAreaValue}
+              onChange={handleTextAreaChange}
+              rows="10"
+              defaultValue={`${patient?.diagnosis || 'Not have'}`}
+              sx={{ width: '100%' }}
+            />
+          </div>
+          <Button variant="contained" sx={{ padding: '10px', width: '150px' }} onClick={handleSave}>
+            Save
+          </Button>
         </div>
       </Container>
     </Page>

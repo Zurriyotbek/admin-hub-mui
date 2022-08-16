@@ -44,7 +44,7 @@ export default function userEdit() {
         },
       })
         .then((res) => {
-          console.log(res);
+          window.location.reload();
         })
         .catch((err) => {
           console.log(err);
@@ -64,7 +64,7 @@ export default function userEdit() {
           onChange={handleChange}
         >
           <MenuItem value={'COMPLETED'}>Completed</MenuItem>
-          <MenuItem value={'PROCESSING'}>Processing</MenuItem>
+          <MenuItem value={'PROCESS'}>Processing</MenuItem>
           <MenuItem value={'PENDING'}>Pending</MenuItem>
         </Select>
         <Button variant="contained" sx={styles.button} onClick={handleSubmit}>
