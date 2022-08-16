@@ -17,7 +17,7 @@ export default function UserDelete({ setDeleteModal }) {
   const handleDelete = async () => {
     await Axios.delete(`${URL}${patient.id}`, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
       },
     })
       .then((res) => {

@@ -37,7 +37,7 @@ export default function userEdit() {
     };
 
     if (status) {
-      Axios.put(URL + patient.id, data, {
+      Axios.put(URL, data, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('admin_token')}`,

@@ -21,6 +21,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux/es/hooks/useDispatch';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import Moment from 'react-moment';
 import Axios from '../api/axios';
 import { setPatients, setSelectedPatient } from '../redux/slices/patients/index';
 
@@ -75,7 +76,7 @@ export default function User() {
   const [loading, setLoading] = useState(false);
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+    setPage(newPage - 1);
   };
 
   const handleFilterByName = (event) => {
@@ -137,6 +138,7 @@ export default function User() {
       });
   }, [filterName, page]);
 
+  const dateToFormat = '1976-04-19T12:59-0500';
   return (
     <Page title="User">
       <Container>
@@ -145,7 +147,7 @@ export default function User() {
             Patients
           </Typography>
         </Stack>
-
+        <Moment>{dateToFormat}</Moment>
         <Card>
           <UserListToolbar filterName={filterName} onFilterName={handleFilterByName} />
 
@@ -224,7 +226,7 @@ export default function User() {
                   </TableBody>
                 )}
 
-                {isUserNotFound && (
+                {!loading && isUserNotFound && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -237,7 +239,7 @@ export default function User() {
             </TableContainer>
           </Scrollbar>
           <div style={{ marginTop: '30px', marginBottom: '20px', display: 'flex', justifyContent: 'center' }}>
-            <Pagination count={pagesCount - 1} color="primary" onChange={handleChangePage} />
+            <Pagination count={pagesCount} color="primary" onChange={handleChangePage} />
           </div>
         </Card>
       </Container>

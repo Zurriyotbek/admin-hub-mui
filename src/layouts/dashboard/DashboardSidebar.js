@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
-import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
+import { Box, Link, Button, Drawer, Typography, Stack } from '@mui/material';
+import { useSelector } from 'react-redux';
 // mock
-import account from '../../_mock/account';
+// import account from '../../_mock/account';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // components
@@ -27,7 +28,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 }));
 
 const AccountStyle = styled('div')(({ theme }) => ({
-  display: 'flex',
+  // display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(2, 2.5),
   borderRadius: Number(theme.shape.borderRadius) * 1.5,
@@ -44,7 +45,16 @@ DashboardSidebar.propTypes = {
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
 
+  const admin = useSelector((state) => state.admin);
+
+  const navigate = useNavigate();
+
   const isDesktop = useResponsive('up', 'lg');
+
+  const handleLogOut = () => {
+    localStorage.clear();
+    navigate('/login');
+  };
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -67,13 +77,13 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to="#">
           <AccountStyle>
-            <Avatar src={account.photoURL} alt="photoURL" />
-            <Box sx={{ ml: 2 }}>
-              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
+            {/* <Avatar src={account.photoURL} alt="photoURL" /> */}
+            <Box sx={{ ml: 2, display: 'flex' }}>
+              <Typography variant="subtitle2" sx={{ marginRight: '5px', color: 'text.primary' }}>
+                {admin?.name}
               </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
+              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+                {admin?.surname}
               </Typography>
             </Box>
           </AccountStyle>
@@ -84,9 +94,9 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
 
       <Box sx={{ flexGrow: 1 }} />
 
-      {/* <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-        <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
-          <Box
+      <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
+        <Stack alignItems="start" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
+          {/* <Box
             component="img"
             src="/static/illustrations/illustration_avatar.png"
             sx={{ width: 100, position: 'absolute', top: -50 }}
@@ -99,13 +109,13 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               From only $69
             </Typography>
-          </Box>
+          </Box> */}
 
-          <Button href="https://material-ui.com/store/items/minimal-dashboard/" target="_blank" variant="contained">
-            Upgrade to Pro
+          <Button variant="outlined" onClick={handleLogOut}>
+            Log out
           </Button>
         </Stack>
-      </Box> */}
+      </Box>
     </Scrollbar>
   );
 

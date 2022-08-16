@@ -71,7 +71,7 @@ export default function LoginForm() {
         const token = response.data.jwt;
         const user = response.data;
         localStorage.setItem('admin_token', token);
-        localStorage.setItem('admin_user', JSON.stringify(user));
+        localStorage.setItem('admin', JSON.stringify(user));
         dispatch(setAdmin(user));
         navigate('/dashboard/app', { replace: true });
       })
