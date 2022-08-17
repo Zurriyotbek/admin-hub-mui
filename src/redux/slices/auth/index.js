@@ -36,27 +36,3 @@ const authSlice = createSlice({
 const { authStart, authSuccess, authFail, logout } = authSlice.actions;
 
 export default authSlice.reducer;
-
-// export const authCheckState = (user) => (dispatch) => {
-//   dispatch(authStart());
-//   if (user) {
-//     dispatch(authSuccess(user));
-//   } else {
-//     dispatch(logout());
-//   }
-// };
-
-// export const auth = (email, password) => (dispatch) => {
-//     dispatch(authStart());
-//     auth(email, password)
-//         .then((res) => {
-//             dispatch(authSuccess(res.data));
-//         }).catch((err) => {
-//             dispatch(authFail(err.message));
-//         }
-//     );
-// }
-
-// export const logout = () => (dispatch) => {
-//     dispatch(logout());
-// }
