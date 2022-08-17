@@ -20,8 +20,8 @@ export default function UserDelete({ setDeleteModal }) {
         Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
       },
     })
-      .then((res) => {
-        console.log(res, 'delete res');
+      .then(() => {
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err, 'delete err');

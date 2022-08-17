@@ -107,12 +107,10 @@ export default function UserInfo() {
           Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
         },
       })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           notify('success');
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
           notify('error');
         });
     }

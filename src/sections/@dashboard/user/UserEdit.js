@@ -4,6 +4,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { Button } from '@mui/material';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 //
 import { useSelector } from 'react-redux';
 import Axios from '../../../api/axios';
@@ -26,6 +28,47 @@ export default function userEdit() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [status, setStatus] = useState('');
 
+  // React Tostify
+  const notify = (status) => {
+    switch (status) {
+      case 'success':
+        toast.success('Successfully updated!', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        break;
+      case 'error':
+        toast.error('Error updating', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        break;
+      case 'warning':
+        toast.warn('Write !', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        break;
+      default:
+        break;
+    }
+  };
+
   const handleChange = (event) => {
     setStatus(event.target.value);
   };
@@ -43,17 +86,19 @@ export default function userEdit() {
           Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
         },
       })
-        .then((res) => {
+        .then(() => {
+          notify('success');
           window.location.reload();
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          notify('error');
         });
     }
   };
 
   return (
     <div>
+      <ToastContainer />
       <FormControl sx={{ m: 1, minWidth: 120, width: '100%' }}>
         <InputLabel id="demo-simple-select-helper-label">Status</InputLabel>
         <Select

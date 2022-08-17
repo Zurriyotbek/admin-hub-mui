@@ -20,7 +20,7 @@ import Pagination from '@mui/material/Pagination';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux/es/hooks/useDispatch';
 import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+// import Box from '@mui/material/Box';
 import Moment from 'react-moment';
 import Axios from '../api/axios';
 import { setPatients, setSelectedPatient } from '../redux/slices/patients/index';
@@ -37,16 +37,13 @@ import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
 
-// mock
-import USERLIST from '../_mock/user';
-
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'fullName', label: 'Full name', alignRight: false },
   { id: 'gender', label: 'Gender', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
-  { id: 'complaints', label: 'Complaints', alignRight: false },
+  { id: 'date', label: 'Date', alignRight: false },
   { id: '' },
 ];
 
@@ -138,7 +135,7 @@ export default function User() {
       });
   }, [filterName, page]);
 
-  const dateFormat = 'd MMM YYYY';
+  const dateFormat = 'D MMM YYYY, hh:mm';
   return (
     <Page title="User">
       <Container>
@@ -214,7 +211,7 @@ export default function User() {
                           </TableCell>
 
                           <TableCell align="left" sx={{ width: '450px', overflow: 'clip' }}>
-                            <Moment format="D MMM YYYY, hh:mm">{createdDate.split('.')[0]}</Moment>
+                            <Moment format={dateFormat}>{createdDate.split('.')[0]}</Moment>
                           </TableCell>
 
                           <TableCell align="right">
