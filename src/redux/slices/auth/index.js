@@ -35,6 +35,8 @@ const authSlice = createSlice({
 
 const { authStart, authSuccess, authFail, logout } = authSlice.actions;
 
+export default authSlice.reducer;
+
 // export const authCheckState = (user) => (dispatch) => {
 //   dispatch(authStart());
 //   if (user) {
@@ -58,5 +60,3 @@ const { authStart, authSuccess, authFail, logout } = authSlice.actions;
 // export const logout = () => (dispatch) => {
 //     dispatch(logout());
 // }
-
-export default authSlice.reducer;
