@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const URL = 'https://medifast.eduspace.me/';
+const URL = 'https://api.drdilshod.com/';
 
 const Axios = axios.create({
   baseURL: URL,
@@ -12,4 +12,4 @@ const Axios = axios.create({
 
 export default Axios;
 
-// URL: 'https://medifast.eduspace.me/',
+// https://api.drdilshod.com/
