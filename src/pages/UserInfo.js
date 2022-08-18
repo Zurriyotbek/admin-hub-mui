@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 // icons
 
 // @mui
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Grid, Container, Typography, Button } from '@mui/material';
 import Accordion from '@mui/material/Accordion';
@@ -27,9 +29,31 @@ import { AppWidgetSummary } from '../sections/@dashboard/app';
 const URL = 'api/v1/patient/update-diagnosis';
 // ----------------------------------------------------------------------
 export default function UserInfo() {
-  const patient = useSelector((state) => state.patients.selectedPatient);
+  const { selectedPatient } = useSelector((state) => state.patients);
+
+  const [patient, setPatient] = useState(selectedPatient);
 
   const [textAreaValue, setTextAreaValue] = useState(patient?.diagnosis || 'Not have');
+
+  useEffect(() => {
+    if (!patient.id) {
+      const patientId = JSON.parse(localStorage.getItem('selected_patient_id'));
+
+      Axios.get(`api/v1/patient/get/${patientId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
+        },
+      })
+        .then((res) => {
+          console.log(res.data.patient);
+          setPatient(res.data.patient);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    console.log(patient);
+  }, [patient]);
 
   const handleCompaint = (complaint) => {
     if (complaint === null) {
@@ -116,178 +140,188 @@ export default function UserInfo() {
     }
   };
 
-  return (
-    <Page title="User: UserInfo">
-      <ToastContainer />
+  if (patient?.id) {
+    return (
+      <Page title="User: UserInfo">
+        <ToastContainer />
 
-      <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-          {`${patient.name} ${patient.surname}`}
-          <img
-            src={patient.gender === 'FEMALE' ? marsIcon : venusIcon}
-            alt="icon"
-            style={{ marginLeft: '10px', width: '30px', height: '30px' }}
-          />
-          <Typography sx={{ marginLeft: 'auto', fontSize: '20px' }}>
-            Phone:
-            <a href={`tel:${patient?.phone}`} style={{ marginLeft: '10px' }}>
-              {patient?.phone}
-            </a>
+        <Container maxWidth="xl">
+          <Typography variant="h4" sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+            {`${patient.name} ${patient.surname}`}
+            <img
+              src={patient.gender === 'FEMALE' ? marsIcon : venusIcon}
+              alt="icon"
+              style={{ marginLeft: '10px', width: '30px', height: '30px' }}
+            />
+            <Typography sx={{ marginLeft: 'auto', fontSize: '20px' }}>
+              Phone:
+              <a href={`tel:${patient?.phone}`} style={{ marginLeft: '10px' }}>
+                {patient?.phone}
+              </a>
+            </Typography>
           </Typography>
-        </Typography>
-        <Typography sx={{ mb: 5, textAlign: 'right', color: 'GrayText', fontSize: '20px' }}>
-          <span style={{ fontWeight: 'bold' }}>Manzil: </span>
-          {patient?.region}
-        </Typography>
-
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Birth date" total={patient?.birthDate} icon={'ant-design:android-filled'} />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary
-              title="Weight"
-              // kg
-              total={`${patient?.weight}`}
-              color="info"
-              icon={'ant-design:apple-filled'}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary
-              title="Height"
-              // sm
-              total={`${patient?.height}`}
-              color="warning"
-              icon={'ant-design:windows-filled'}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary
-              title="Temperature"
-              // °C
-              total={`${patient?.temperature || 'unknown'} `}
-              color="error"
-              icon={'ant-design:bug-filled'}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary
-              title="Blodd pressure"
-              // °C
-              total={`${patient?.bloodPressure || 'unknown'} `}
-              color="success"
-              icon={'ant-design:bug-filled'}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary
-              title="Heart rate"
-              // °C
-              total={`${patient?.heartBeat || 'unknown'} `}
-              color="error"
-              icon={'ant-design:bug-filled'}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary
-              title="Smokes"
-              // °C
-              total={`${patient?.cigarette || 'unknown'} `}
-              color="info"
-              icon={'ant-design:bug-filled'}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary
-              title="Current temperature"
-              // °C
-              total={`${patient?.currentTemperature || 'unknown'} `}
-              color="warning"
-              icon={'ant-design:bug-filled'}
-            />
-          </Grid>
-        </Grid>
-        <div style={{ marginTop: '70px', boxShadow: '1px 1px 10px 1px rgba(23,17,17,0.2)', borderRadius: '20px' }}>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-              <Typography variant="h5">Complaints</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>{patient?.complaints || 'No complaints'}</Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
-              <Typography variant="h5">Cause of complaint</Typography>
-            </AccordionSummary>
-            <AccordionDetails>{handleCompaint(patient?.causeOfComplaint)}</AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-              <Typography variant="h5">Started time</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>{patient?.complaintStartedTime || 'Unknown'}</Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-              <Typography variant="h5">Diabetes </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>{patient?.diabetes || 'Unknown'}</Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-              <Typography variant="h5">Desease list</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>{patient?.diseasesList || 'Unknown'}</Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-              <Typography variant="h5">Drug list</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>{patient?.drugsList || 'Unknown'}</Typography>
-            </AccordionDetails>
-          </Accordion>
-        </div>
-
-        {/* Patient diagnosis */}
-        <div
-          style={{
-            marginTop: '50px',
-            padding: '20px',
-            boxShadow: '1px 1px 10px 1px rgba(23,17,17,0.2)',
-            borderRadius: '20px',
-          }}
-        >
-          <Typography variant="h5" style={{ marginBottom: '20px', textAlign: 'center' }}>
-            Patient diagnosis
+          <Typography sx={{ mb: 5, textAlign: 'right', color: 'GrayText', fontSize: '20px' }}>
+            <span style={{ fontWeight: 'bold' }}>Manzil: </span>
+            {patient?.region}
           </Typography>
-          <div style={{ marginBottom: '20px' }}>
-            <TextField
-              id="outlined-multiline-static"
-              multiline
-              value={textAreaValue}
-              onChange={handleTextAreaChange}
-              rows="10"
-              defaultValue={`${patient?.diagnosis || 'Not have'}`}
-              sx={{ width: '100%' }}
-            />
+
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6} md={3}>
+              <AppWidgetSummary title="Birth date" total={patient?.birthDate} icon={'ant-design:android-filled'} />
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={3}>
+              <AppWidgetSummary
+                title="Weight"
+                // kg
+                total={`${patient?.weight}`}
+                color="info"
+                icon={'ant-design:apple-filled'}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={3}>
+              <AppWidgetSummary
+                title="Height"
+                // sm
+                total={`${patient?.height}`}
+                color="warning"
+                icon={'ant-design:windows-filled'}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={3}>
+              <AppWidgetSummary
+                title="Temperature"
+                // °C
+                total={`${patient?.temperature || 'unknown'} `}
+                color="error"
+                icon={'ant-design:bug-filled'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <AppWidgetSummary
+                title="Blodd pressure"
+                // °C
+                total={`${patient?.bloodPressure || 'unknown'} `}
+                color="success"
+                icon={'ant-design:bug-filled'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <AppWidgetSummary
+                title="Heart rate"
+                // °C
+                total={`${patient?.heartBeat || 'unknown'} `}
+                color="error"
+                icon={'ant-design:bug-filled'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <AppWidgetSummary
+                title="Smokes"
+                // °C
+                total={`${patient?.cigarette || 'unknown'} `}
+                color="info"
+                icon={'ant-design:bug-filled'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <AppWidgetSummary
+                title="Current temperature"
+                // °C
+                total={`${patient?.currentTemperature || 'unknown'} `}
+                color="warning"
+                icon={'ant-design:bug-filled'}
+              />
+            </Grid>
+          </Grid>
+          <div style={{ marginTop: '70px', boxShadow: '1px 1px 10px 1px rgba(23,17,17,0.2)', borderRadius: '20px' }}>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                <Typography variant="h5">Complaints</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>{patient?.complaints || 'No complaints'}</Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
+                <Typography variant="h5">Cause of complaint</Typography>
+              </AccordionSummary>
+              <AccordionDetails>{handleCompaint(patient?.causeOfComplaint)}</AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                <Typography variant="h5">Started time</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>{patient?.complaintStartedTime || 'Unknown'}</Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                <Typography variant="h5">Diabetes </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>{patient?.diabetes || 'Unknown'}</Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                <Typography variant="h5">Desease list</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>{patient?.diseasesList || 'Unknown'}</Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                <Typography variant="h5">Drug list</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>{patient?.drugsList || 'Unknown'}</Typography>
+              </AccordionDetails>
+            </Accordion>
           </div>
-          <Button variant="contained" sx={{ padding: '10px', width: '150px' }} onClick={handleSave}>
-            Save
-          </Button>
-        </div>
-      </Container>
-    </Page>
+
+          {/* Patient diagnosis */}
+          <div
+            style={{
+              marginTop: '50px',
+              padding: '20px',
+              boxShadow: '1px 1px 10px 1px rgba(23,17,17,0.2)',
+              borderRadius: '20px',
+            }}
+          >
+            <Typography variant="h5" style={{ marginBottom: '20px', textAlign: 'center' }}>
+              Patient diagnosis
+            </Typography>
+            <div style={{ marginBottom: '20px' }}>
+              <TextField
+                id="outlined-multiline-static"
+                multiline
+                value={textAreaValue}
+                onChange={handleTextAreaChange}
+                rows="10"
+                defaultValue={`${patient?.diagnosis || 'Not have'}`}
+                sx={{ width: '100%' }}
+              />
+            </div>
+            <Button variant="contained" sx={{ padding: '10px', width: '150px' }} onClick={handleSave}>
+              Save
+            </Button>
+          </div>
+        </Container>
+      </Page>
+    );
+  }
+
+  return (
+    <div>
+      <div style={{ minHeight: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <CircularProgress />
+      </div>
+    </div>
   );
 }

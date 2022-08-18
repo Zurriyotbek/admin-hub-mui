@@ -47,6 +47,8 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
 
   const admin = useSelector((state) => state.admin);
 
+  const localAdmin = JSON.parse(localStorage.getItem('admin'));
+
   const navigate = useNavigate();
 
   const isDesktop = useResponsive('up', 'lg');
@@ -80,10 +82,10 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
             {/* <Avatar src={account.photoURL} alt="photoURL" /> */}
             <Box sx={{ ml: 2, display: 'flex' }}>
               <Typography variant="subtitle2" sx={{ marginRight: '5px', color: 'text.primary' }}>
-                {admin?.name}
+                {localAdmin?.name || admin?.name}
               </Typography>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {admin?.surname}
+                {localAdmin?.surname || admin?.surname}
               </Typography>
             </Box>
           </AccountStyle>

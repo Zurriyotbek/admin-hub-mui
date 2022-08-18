@@ -94,6 +94,7 @@ export default function User() {
     }
   };
 
+  console.log(localStorage.getItem('selected_patient_id'));
   const handleUserStatus = (status) => {
     // status === 'PENDING' ? 'error' : status === 'PROCESSING' ? 'warning' : 'success'
     switch (status) {
@@ -172,7 +173,10 @@ export default function User() {
                           key={id}
                           tabIndex={-1}
                           role="checkbox"
-                          onClick={() => dispatch(setSelectedPatient(row))}
+                          onClick={() => {
+                            dispatch(setSelectedPatient(row));
+                            localStorage.setItem('selected_patient_id', JSON.stringify(row.id));
+                          }}
                         >
                           <TableCell padding="checkbox">{/*  */}</TableCell>
                           <TableCell
