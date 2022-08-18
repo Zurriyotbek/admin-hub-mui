@@ -29,9 +29,15 @@ import { AppWidgetSummary } from '../sections/@dashboard/app';
 const URL = 'api/v1/patient/update-diagnosis';
 // ----------------------------------------------------------------------
 export default function UserInfo() {
-  const { selectedPatient } = useSelector((state) => state.patients);
+  // const { selectedPatient } = useSelector((state) => state.patients);
 
-  const [patient, setPatient] = useState(selectedPatient);
+  const [patient, setPatient] = useState('');
+
+  const [imageList, setImageList] = useState([]);
+
+  const [drugList, setDrugList] = useState([]);
+
+  const [inspection, setInspection] = useState([]);
 
   const [textAreaValue, setTextAreaValue] = useState(patient?.diagnosis || 'Not have');
 
@@ -45,16 +51,24 @@ export default function UserInfo() {
         },
       })
         .then((res) => {
-          console.log(res.data.patient);
-          setPatient(res.data.patient);
+          setPatient(res?.data?.patient);
+          setImageList(res?.data?.imageList);
         })
         .catch((err) => {
           console.log(err);
         });
     }
-    console.log(patient);
   }, [patient]);
 
+  // useEffect hook to get inspection of the patient from imageList
+  useEffect(() => {
+    const filteredDrugList = imageList.filter((item) => item.type === 'DRUGS');
+    const inspectionList = imageList.filter((item) => item.type === 'INSPECTION');
+    setDrugList(filteredDrugList);
+    setInspection(inspectionList);
+  }, [imageList]);
+
+  //
   const handleCompaint = (complaint) => {
     if (complaint === null) {
       return <Typography>No cause of complaints</Typography>;
@@ -280,7 +294,27 @@ export default function UserInfo() {
                 <Typography variant="h5">Drug list</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Typography>{patient?.drugsList || 'Unknown'}</Typography>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 300px)' }}>
+                  {drugList?.map((item, index) => (
+                    <a key={index} href={item?.link} target="_blank" rel="noopener noreferrer">
+                      <Typography sx={{ marginBottom: '10px' }}>{`Drug - ${index + 1}`}</Typography>
+                    </a>
+                  ))}
+                </div>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                <Typography variant="h5">Inspection</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 300px)' }}>
+                  {inspection?.map((item, index) => (
+                    <a key={index} href={item?.link} target="_blank" rel="noopener noreferrer">
+                      <Typography sx={{ marginBottom: '10px' }}>{`Inspection - ${index + 1}`}</Typography>
+                    </a>
+                  ))}
+                </div>
               </AccordionDetails>
             </Accordion>
           </div>
